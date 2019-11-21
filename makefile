@@ -41,4 +41,8 @@ lint:
 	@echo "$(P) Run eslint"
 	$(ROOT_BIN_DIR)/eslint -c "$(ROOT_DIR).eslintrc" --ignore-path "$(ROOT_DIR).eslintignore" --fix "**/*.js"
 
-.PHONY: build clean lint prettier dev check-deps
+version:
+	@echo "$(P) Bump new version"
+	$(ROOT_BIN_DIR)/standard-version
+
+.PHONY: build clean lint prettier dev check-deps version
