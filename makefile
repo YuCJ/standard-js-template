@@ -43,6 +43,6 @@ lint:
 
 version:
 	@echo "$(P) Bump new version"
-	$(ROOT_BIN_DIR)/standard-version
+	$(ROOT_BIN_DIR)/commit-and-tag-version
 
 .PHONY: build clean lint prettier dev check-deps version
