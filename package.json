@@ -1,6 +1,6 @@
 {
   "name": "standard-js-template",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "lib/index.js",
   "repository": "https://github.com/YuCJ/standard-js-template.git",
   "author": "yucj <nakts0123@gmail.com>",
