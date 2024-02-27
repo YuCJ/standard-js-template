@@ -1,10 +1,10 @@
 class Test {
-  static member = 'x'
+  static member = "x";
   constructor() {
-    this.greeting = 'hello world'
+    this.greeting = "hello world";
   }
 }
 
-const test = new Test()
+const test = new Test();
 
-console.log(`${Test.member}, ${test.greeting}`)
+console.log(`${Test.member}, ${test.greeting}`);
