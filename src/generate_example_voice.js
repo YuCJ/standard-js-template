@@ -169,16 +169,17 @@ async function main() {
     { flags: "a" }
   );
 
-  const i = 0;
-  const card = cards[i];
-  try {
-    const soundFilename = await getAndSaveSpeechThrottled(card);
-    cardsStream.write(
-      card.concat(getAnkiSoundTag(soundFilename)).join("|") + "\n"
-    );
-  } catch (err) {
-    errorlogStream.write(`${i}: ` + err.message + "\n");
-    errorCardsStream.write(card.join("|") + "\n");
+  for (let i = 0; i < 300; i++) {
+    const card = cards[i];
+    try {
+      const soundFilename = await getAndSaveSpeechThrottled(card);
+      cardsStream.write(
+        card.concat(getAnkiSoundTag(soundFilename)).join("|") + "\n"
+      );
+    } catch (err) {
+      errorlogStream.write(`${i}: ` + err.message + "\n");
+      errorCardsStream.write(card.join("|") + "\n");
+    }
   }
 }
 
