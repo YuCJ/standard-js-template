@@ -1,6 +1,5 @@
 const fs = require("fs");
 const axios = require("axios");
-const path = require("path");
 
 // Function to read the file and process words
 function readWordsFromFile(filename) {
@@ -20,7 +19,7 @@ function readWordsFromFile(filename) {
 }
 
 function addCard(word) {
-  const lessonId = "31e5ee28-b4f5-4a3a-92e9-f296239b1ab4";
+  const lessonId = "922acde1-9d60-42ea-acde-0482e08d1a34";
   // https://api.lingvist.com/2.0/lessons/31e5ee28-b4f5-4a3a-92e9-f296239b1ab4/add-cards
   const origin = "https://api.lingvist.com";
 
@@ -49,7 +48,9 @@ function addCard(word) {
 }
 
 const runTime = new Date();
-const logFilePath = `${runTime.toISOString().replace(/[^a-zA-Z0-9]/g, "_")}.log.txt`;
+const logFilePath = `${runTime
+  .toISOString()
+  .replace(/[^a-zA-Z0-9]/g, "_")}.log.txt`;
 function log(...messages) {
   for (const message of messages) {
     try {
@@ -69,27 +70,25 @@ function log(...messages) {
 }
 
 async function main() {
-  const words = await readWordsFromFile(
-    path.resolve("./src/American_Oxford_5000_by_CEFR_level.txt")
-  );
-  for (let i = 6; i < 9; i++) {
+  const words = await readWordsFromFile("American_Oxford_3.txt");
+  const counts = words.length;
+  for (let i = 0; i < counts; i++) {
     const word = words[i];
-    let res;
     try {
-      res = await new Promise((resolve, reject) => {
+      await new Promise((resolve, reject) => {
         addCard(word)
           .then((res) => {
+            log(`Adding word '${word}' (${i}) completed`);
+            log(res.status, JSON.stringify(res.data, undefined, 2));
             setTimeout(() => {
               resolve(res);
-            }, 1000);
+            }, 378);
           })
           .catch(reject);
       });
     } catch (error) {
       log(`Adding word '${word}' (${i}) failed`, error);
     }
-    log(`Adding word '${word}' (${i}) completed`);
-    log(res.status, JSON.stringify(res.data, undefined, 2));
   }
 }
 
