@@ -1,5 +1,7 @@
 const fs = require("fs");
 
+const CARDS_FILE = "oxford_anki_cards.txt";
+
 /*  
 card
 [
@@ -10,12 +12,14 @@ card
 ]
 */
 const cards = fs
-  .readFileSync("oxford_anki_cards.txt", "utf-8")
+  .readFileSync(CARDS_FILE, "utf-8")
   .split("\n")
   .map((line) => line.split("|").map((cell) => cell.trim()));
 
+const isCardHasCloze = (card) => card?.[2] && card[2].match(/{{c1::(.*)}}/g);
+
 for (const card of cards) {
-  if (!card[2] || !card[2].match(/{{c1::(.*)}}/g)) {
+  if (!isCardHasCloze(card)) {
     console.log(card);
   }
 }
