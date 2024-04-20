@@ -29,11 +29,11 @@ card
 const cards = fs
   .readFileSync(INPUT_FILE, "utf-8")
   .split("\n")
-  .map((line) => line.split("|").map((cell) => cell.trim()))
-  .filter(Boolean);
+  .filter(Boolean)
+  .map((line) => line.split("|").map((cell) => cell.trim()));
 
 const getVoiceSourceText = (card) =>
-  card[2].replace("{{c1::", "").replace("}}", "");
+  card[2]?.replace("{{c1::", "").replace("}}", "");
 
 const getWord = (card) => card[0];
 
@@ -53,6 +53,10 @@ async function main() {
   for (let i = 0; i < cards.length; i++) {
     const card = cards[i];
     const word = getWord(card);
+
+    if (!word) {
+      continue;
+    }
 
     let wordSound;
     const allErrors = {};

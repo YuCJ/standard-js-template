@@ -18,13 +18,13 @@ const ERROR_WORDS_FILE = `${inputFileObj.name}.error-words.txt`;
 // Access your API key (see "Set up your API key" above)
 const genAI = new GoogleGenerativeAI(require("./gemini_k.json").key);
 
-const instruction = `I will give you a list of vocabularies. To each vocabulary, please:
+const instruction = `I will give you a list. Each line of the list will be a vocabulary, or a vocabulary with a sentence with it ('|' as separator). Please follow the instructions below to transform the list:
 
-1. Briefly explain the word to an English learner with CEFR B2 level. If the word has multiple meaning, just choose the most common one. Use abbreviation for part of speech, ex: [n.], [adj.], [adv.], [vi.], [vt.].... 
+1. Write brief explanation of the vocabulary to an English learner with CEFR B2 level. If the vocabulary has multiple meanings and there is accompanying sentence in the source data, please choose the meaning of the vocabulary as it is represented in the sentence. If there are no accompanying sentences, please choose the most common meaning. And please use abbreviation to note the part of speech of the meaning, ex: [n.], [adj.], [adv.], [vi.], [vt.].... 
 
-2. Write an example sentence for the word with that meaning. It would be great if the sentence can help learner to learn that in which context is the word suitable to be used, so there can up to two sentences in an example, in order to demonstrate the context. Do not use uncommon expressions or words found in modern English to make the sentence. Please use Anki cloze template to wrap the word in the example sentence.
+2. Write an example sentence for the word with the meaning. It would be great if the sentence can help learner to learn that in which context is the word suitable to be used, so there can up to 3 sentences in an example, in order to demonstrate the context. Do not use uncommon expressions or words found in modern English to make the sentence. Please use Anki cloze template to wrap the word in the example sentence.
 
-3. Translate the example into Traditional Chinese. Do not put any <em> tag wrapping the word in the translation. Prefer use words that used in Taiwan rather than in China or Hong Kong. For example, "影片" is better than "視頻" for "video", "高品質" is better than "高質量" for "high quality", and "馬鈴薯" is better than "土豆" for "potato."
+3. Translate the example sentence into Traditional Chinese. Do not put any <em> tag wrapping the word in the translation. Prefer use words that used in Taiwan rather than in China or Hong Kong. For example, "影片" is better than "視頻" for "video", "高品質" is better than "高質量" for "high quality", and "馬鈴薯" is better than "土豆" for "potato."
 
 Please list one vocabulary per line. Separate the word, the explanation, the example sentence, and the translation of the example with "|".
 
@@ -33,11 +33,11 @@ Please reply the output result only. No greetings or any other words in your res
 I'm giving you an example to help you understand the task better. Here is an example input and output:
 
 The example input is:
-assign
-assistance
+assign  
+assistance|I sought assistance from my friends when I moved into my new apartment, and they helped me unpack and settle in.
 astonishing
 inquire
-hostility
+hostility|Despite my attempts to reconcile, there was an underlying atmosphere of hostility between us, making it challenging to resolve our differences.
 altogether
 
 The example output (your response) should be:
