@@ -1,6 +1,5 @@
-const fs = require("fs");
-const textToSpeech = require("@google-cloud/text-to-speech");
-const throttle = require("./throttle").default;
+import fs from "fs";
+import { getAndSaveSpeechThrottled } from "./getAndSaveSpeech";
 
 const LANGUAGE_CODE = {
   enUS: "en-US",
@@ -12,6 +11,12 @@ const SSML_VOICE_GENDER = {
   FEMALE: "FEMALE",
   NEUTRAL: "NEUTRAL",
 };
+
+const INPUT_CARDS_FILE = "oxford_anki_cards.txt";
+const OUTPUT_CARDS_FILE = "oxford_anki_cards_with_example_sounds.txt";
+const ERROR_LOG_FILE = "oxford_anki_cards_with_example_sounds.error_logs.txt";
+const ERROR_CARDS_FILE =
+  "oxford_anki_cards_with_example_sounds.error_words.txt";
 
 const voices = {
   wavenet: [
@@ -101,16 +106,6 @@ const pickRandomVoice = () => {
   const allVoices = voices.wavenet.concat(voices.standard, voices.neural2);
   return allVoices[Math.floor(Math.random() * allVoices.length)];
 };
-
-const AUDIO_ENCODING = {
-  AUDIO_ENCODING_UNSPECIFIED: "AUDIO_ENCODING_UNSPECIFIED",
-  LINEAR16: "LINEAR16",
-  MP3: "MP3",
-  OGG_OPUS: "OGG_OPUS",
-  MULAW: "MULAW",
-  ALAW: "ALAW",
-};
-
 const getAnkiSoundTag = (filename) => `[sound:${filename}]`;
 
 /*  
@@ -123,56 +118,33 @@ card
 ]
 */
 const cards = fs
-  .readFileSync("oxford_anki_cards.txt", "utf-8")
+  .readFileSync(INPUT_CARDS_FILE, "utf-8")
   .split("\n")
   .map((line) => line.split("|").map((cell) => cell.trim()));
 
 const getVoiceSourceText = (card) =>
   card[2].replace("{{c1::", "").replace("}}", "");
 
-const client = new textToSpeech.TextToSpeechClient();
-
-const getAndSaveSpeech = async (card) => {
-  const request = {
-    input: {
-      text: getVoiceSourceText(card),
-    },
-    // Select the language and SSML voice gender (optional)
-    voice: pickRandomVoice(),
-    // select the type of audio encoding
-    audioConfig: { audioEncoding: AUDIO_ENCODING.MP3 },
-  };
-  const filename = `${card[0]}-ex-${request.voice.name}.mp3`;
-  const [response] = await client.synthesizeSpeech(request);
-  fs.writeFileSync(`./mp3/${filename}`, response.audioContent);
-  return filename;
-};
-
-const getAndSaveSpeechThrottled = throttle(getAndSaveSpeech, {
-  limit: 150,
-  interval: 60 * 1000,
-});
+const getWord = (card) => card[0];
 
 async function main() {
-  const cardsStream = fs.createWriteStream(
-    "oxford_anki_cards_with_example_sounds.txt",
-    {
-      flags: "a",
-    }
-  );
-  const errorlogStream = fs.createWriteStream(
-    "oxford_anki_cards_with_example_sounds.error_logs.txt",
-    { flags: "a" }
-  );
-  const errorCardsStream = fs.createWriteStream(
-    "oxford_anki_cards_with_example_sounds.error_words.txt",
-    { flags: "a" }
-  );
+  const cardsStream = fs.createWriteStream(OUTPUT_CARDS_FILE, {
+    flags: "a",
+  });
+  const errorlogStream = fs.createWriteStream(ERROR_LOG_FILE, { flags: "a" });
+  const errorCardsStream = fs.createWriteStream(ERROR_CARDS_FILE, {
+    flags: "a",
+  });
 
-  for (let i = 0; i < 300; i++) {
+  for (let i = 0; i < cards.length; i++) {
     const card = cards[i];
     try {
-      const soundFilename = await getAndSaveSpeechThrottled(card);
+      const voice = pickRandomVoice();
+      const soundFilename = await getAndSaveSpeechThrottled({
+        text: getVoiceSourceText(card),
+        output: `./mp3/${getWord(card)}-ex-${voice.name}.mp3`,
+        voice,
+      });
       cardsStream.write(
         card.concat(getAnkiSoundTag(soundFilename)).join("|") + "\n"
       );
