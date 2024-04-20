@@ -22,6 +22,7 @@ dev:
 build: clean
 	@echo "$(P) Build distribution package files"
 	NODE_ENV=production $(ROOT_BIN_DIR)/babel src --out-dir $(OUTPUT_DIR)
+	cp src/*.json $(OUTPUT_DIR)/
 
 clean:
 	@echo "$(P) Clean $(OUTPUT_DIR)/"

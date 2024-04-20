@@ -1,5 +1,7 @@
 lib/
 dist/
+output/
+archived/
 
 # Logs
 logs
