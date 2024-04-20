@@ -1,4 +1,5 @@
 import fs from "fs";
+import path from "path";
 
 export default function download(url, output) {
   return new Promise((resolve, reject) => {
@@ -9,7 +10,7 @@ export default function download(url, output) {
       reject(err);
     });
     fileStream.on("finish", () => {
-      resolve();
+      resolve(path.basename(output));
     });
   });
 }
