@@ -1,11 +1,19 @@
+import path from "path";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import throttle from "./throttle";
 
 const MAX_WORDS_PER_REQUEST = 25;
-const INPUT_FILE = "oxford_anki_cards.error_words_retry.txt";
-const OUTPUT_FILE = "oxford_anki_cards_retry.txt";
-const ERROR_LOG_FILE = "oxford_anki_cards.error_logs_retry.txt";
-const ERROR_WORDS_FILE = "oxford_anki_cards.error_words_retry.txt";
+
+const INPUT_FILE = process.env.INPUT_FILE;
+if (!INPUT_FILE) {
+  throw new Error("No input file provided");
+}
+
+const inputFileObj = path.parse(INPUT_FILE);
+
+const OUTPUT_FILE = `${inputFileObj.name}.cards.txt`;
+const ERROR_LOG_FILE = `${inputFileObj.name}.error-logs.txt`;
+const ERROR_WORDS_FILE = `${inputFileObj.name}.error-words.txt`;
 
 // Access your API key (see "Set up your API key" above)
 const genAI = new GoogleGenerativeAI(require("./gemini_k.json").key);

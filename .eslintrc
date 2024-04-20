@@ -10,5 +10,7 @@
   "plugins": [
     "babel"
   ],
-  "settings": {}
+  "globals": {
+    "fetch": "readonly"
+  }
 }

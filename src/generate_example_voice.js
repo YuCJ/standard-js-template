@@ -1,4 +1,5 @@
 import fs from "fs";
+import path from "path";
 import { getAndSaveSpeechThrottled } from "./getAndSaveSpeech";
 
 const LANGUAGE_CODE = {
@@ -12,11 +13,15 @@ const SSML_VOICE_GENDER = {
   NEUTRAL: "NEUTRAL",
 };
 
-const INPUT_CARDS_FILE = "oxford_anki_cards.txt";
-const OUTPUT_CARDS_FILE = "oxford_anki_cards_with_example_sounds.txt";
-const ERROR_LOG_FILE = "oxford_anki_cards_with_example_sounds.error_logs.txt";
-const ERROR_CARDS_FILE =
-  "oxford_anki_cards_with_example_sounds.error_words.txt";
+const INPUT_FILE = process.env.INPUT_FILE;
+if (!INPUT_FILE) {
+  throw new Error("No input file provided");
+}
+
+const inputFileObj = path.parse(INPUT_FILE);
+const OUTPUT_CARDS_FILE = `${inputFileObj.name}.voice-cards.txt`;
+const ERROR_LOG_FILE = `${inputFileObj.name}.error-logs.txt`;
+const ERROR_CARDS_FILE = `${inputFileObj.name}.error-cards.txt`;
 
 const voices = {
   wavenet: [
@@ -118,7 +123,7 @@ card
 ]
 */
 const cards = fs
-  .readFileSync(INPUT_CARDS_FILE, "utf-8")
+  .readFileSync(INPUT_FILE, "utf-8")
   .split("\n")
   .map((line) => line.split("|").map((cell) => cell.trim()));
 

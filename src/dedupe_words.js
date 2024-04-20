@@ -1,8 +1,8 @@
 const _ = require("lodash");
 const fs = require("fs");
 
-const INPUT_FILE = "./src/American_Oxford_5000_by_CEFR_level.txt";
-const OUTPUT_FILE = "oxford_words.txt";
+const INPUT_FILE = "file.txt";
+const OUTPUT_FILE = "file.dedupe.txt";
 
 const oxfordWords = fs
   .readFileSync(INPUT_FILE, "utf-8")
