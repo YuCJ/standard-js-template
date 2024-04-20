@@ -2,6 +2,7 @@ lib/
 dist/
 output/
 archived/
+mp3/
 
 # Logs
 logs

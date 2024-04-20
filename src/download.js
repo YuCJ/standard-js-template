@@ -1,16 +1,12 @@
 import fs from "fs";
 import path from "path";
 
-export default function download(url, output) {
-  return new Promise((resolve, reject) => {
-    const response = fetch(url);
-    const fileStream = fs.createWriteStream(output);
-    response.body.pipe(fileStream);
-    response.body.on("error", (err) => {
-      reject(err);
-    });
-    fileStream.on("finish", () => {
-      resolve(path.basename(output));
-    });
+export default async function download(url, output) {
+  const response = await fetch(url, {
+    headers: {
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    },
   });
+  fs.writeFileSync(output, Buffer.from(await response.arrayBuffer()));
+  return path.basename(output);
 }

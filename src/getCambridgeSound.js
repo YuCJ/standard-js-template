@@ -12,10 +12,11 @@ export default async function getCambridgeSound(word) {
   const {
     window: { document },
   } = new JSDOM(await response.text());
-  const soundUrl = document.querySelectorAll(
-    '[src$=".mp3"][src*="us_pron/p"]'
+  const pre = word.slice(0, 3);
+  const soundPath = document.querySelectorAll(
+    `.entry-body .us [src$=".mp3"][src*="${pre}"]`
   )?.[0]?.src;
-  return soundUrl || null;
+  return soundPath ? "https://dictionary.cambridge.org" + soundPath : null;
 }
 
-getCambridgeSound("proper").then(console.log).catch(console.error);
+// getCambridgeSound("proper").then(console.log).catch(console.error);

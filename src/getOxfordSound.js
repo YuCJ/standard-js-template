@@ -13,9 +13,9 @@ export default async function getOxfordSound(word) {
     window: { document },
   } = new JSDOM(await response.text());
   const soundUrl = document.querySelectorAll(
-    '#us_pron[data-src-mp3$=".mp3"]'
+    '#entryContent .pron-us[data-src-mp3$=".mp3"]'
   )?.[0]?.dataset?.srcMp3;
   return soundUrl || null;
 }
 
-getOxfordSound("hello").then(console.log).catch(console.error);
+// getOxfordSound("hello").then(console.log).catch(console.error);
