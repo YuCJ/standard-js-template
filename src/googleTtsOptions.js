@@ -101,3 +101,11 @@ export const pickRandomVoice = () => {
 export const pickRandomWavenetVoice = () => {
   return VOICES.wavenet[Math.floor(Math.random() * VOICES.wavenet.length)];
 };
+
+export const getVoice = (voiceName) => {
+  if (voiceName === "RANDOM") {
+    return pickRandomVoice();
+  }
+  const allVoices = VOICES.wavenet.concat(VOICES.standard, VOICES.neural2);
+  return allVoices.find((voice) => voice.name === voiceName);
+};

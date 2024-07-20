@@ -38,15 +38,18 @@ const sentences = fs
   .filter(Boolean);
 
 async function main() {
-  const playlistStream = fs.createWriteStream(OUTPUT_FILE, {
-    flags: "a",
-  });
-
   try {
     fs.mkdirSync(`./mp3/${sourceName}`);
   } catch (err) {
     console.error(err);
   }
+
+  const playlistStream = fs.createWriteStream(
+    `./mp3/${sourceName}/${OUTPUT_FILE}`,
+    {
+      flags: "a",
+    }
+  );
 
   for (let i = 0; i < sentences.length; i++) {
     const sentence = sentences[i];

@@ -14,6 +14,11 @@ const AUDIO_ENCODING = {
 
 const client = new textToSpeech.TextToSpeechClient();
 
+const pitch = process.env.PITCH ? parseFloat(process.env.PITCH) : 0; // [-20.0, 20.0]
+const speakingRate = process.env.SPEAKING_RATE
+  ? parseFloat(process.env.SPEAKING_RATE)
+  : 1; // [0.25, 4.0]
+
 const getAndSaveSpeech = async ({ text, output, voice }) => {
   const request = {
     input: {
@@ -21,6 +26,8 @@ const getAndSaveSpeech = async ({ text, output, voice }) => {
     },
     voice,
     audioConfig: { audioEncoding: AUDIO_ENCODING.MP3 },
+    pitch,
+    speakingRate,
   };
   const [response] = await client.synthesizeSpeech(request);
   fs.writeFileSync(output, response.audioContent);
