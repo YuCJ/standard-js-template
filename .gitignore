@@ -62,3 +62,12 @@ typings/
 
 # next.js build output
 .next
+
+# Ignore all directories in the root
+/*/
+
+# Don't ignore the src directory
+!/src/
+
+# ignore key files
+/src/*_k.*
